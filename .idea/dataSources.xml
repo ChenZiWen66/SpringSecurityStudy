@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="SpringSecurityStudyDB@localhost" uuid="cd497ae4-ec33-4f3d-8732-eb35fbd37ab1">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/anime_project?serverTimezone=UTC&amp;characterEncoding=utf8</jdbc-url>
+    </data-source>
+  </component>
+</project>
