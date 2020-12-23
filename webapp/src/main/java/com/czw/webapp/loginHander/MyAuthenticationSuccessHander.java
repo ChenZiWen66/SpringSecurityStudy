@@ -35,7 +35,7 @@ public class MyAuthenticationSuccessHander implements AuthenticationSuccessHandl
         if (principal instanceof UserDetails){
             LOG.info("用户名："+((UserDetails) principal).getUsername());
         }
-        SavedRequest savedRequest = requestCache.getRequest(request, response);
-        redirectStrategy.sendRedirect(request, response, savedRequest.getRedirectUrl());
+//        SavedRequest savedRequest = requestCache.getRequest(request, response);
+        redirectStrategy.sendRedirect(request, response, "/hello");
     }
 }

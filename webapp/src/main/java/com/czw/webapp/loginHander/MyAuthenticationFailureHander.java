@@ -33,7 +33,7 @@ public class MyAuthenticationFailureHander implements AuthenticationFailureHandl
             LOG.info("bbbbbbbbbbbbbbbbb");
         }
         LOG.info(e.toString());
-        SavedRequest savedRequest = requestCache.getRequest(request,response);
-        redirectStrategy.sendRedirect(request,response,savedRequest.getRedirectUrl());
+//        SavedRequest savedRequest = requestCache.getRequest(request,response);
+        redirectStrategy.sendRedirect(request,response,"/hello");
     }
 }
