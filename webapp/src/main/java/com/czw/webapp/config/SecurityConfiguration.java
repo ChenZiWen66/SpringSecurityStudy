@@ -1,5 +1,6 @@
 package com.czw.webapp.config;
 
+import com.czw.webapp.filter.ValidateCodeFilter;
 import com.czw.webapp.loginHander.MyAuthenticationFailureHander;
 import com.czw.webapp.loginHander.MyAuthenticationSuccessHander;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
@@ -19,10 +21,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     MyAuthenticationSuccessHander myAuthenticationSuccessHander;
     @Autowired
     MyAuthenticationFailureHander myAuthenticationFailureHander;
+    @Autowired
+    ValidateCodeFilter validateCodeFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
                 .loginPage("/authentication/require")
                 .loginProcessingUrl("/loginaaa")
@@ -30,8 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .failureHandler(myAuthenticationFailureHander)
                 .and()
                 .authorizeRequests()
-                        .antMatchers("/authentication/require").permitAll()
-                        .antMatchers("/login.html").permitAll()
+                        .antMatchers("/authentication/require","/login.html","/code/image").permitAll()
                         .anyRequest().authenticated()
                 .and()
                 .csrf().disable();
