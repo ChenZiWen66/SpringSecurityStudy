@@ -1,5 +1,6 @@
 package com.czw.webapp.config;
 
+import com.czw.webapp.filter.SmsCodeFilter;
 import com.czw.webapp.filter.ValidateCodeFilter;
 import com.czw.webapp.loginHander.MyAuthenticationFailureHander;
 import com.czw.webapp.loginHander.MyAuthenticationSuccessHander;
@@ -30,13 +31,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     ValidateCodeFilter validateCodeFilter;
     @Autowired
+    SmsCodeFilter smsCodeFilter;
+    @Autowired
     private MyUserDetailService myUserDetailService;
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    SmsAuthenticationConfig smsAuthenticationConfig;
+    @Autowired
+    MyExpiredSessionStrategy myExpiredSessionStrategy;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(smsCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
                     .loginPage("/authentication/require")
                     .loginProcessingUrl("/loginaaa")
@@ -47,9 +55,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .tokenValiditySeconds(30)//记住的时间，单位：秒
                     .userDetailsService(myUserDetailService).and()//处理自动登录逻辑
                 .authorizeRequests()
-                    .antMatchers("/authentication/require", "/login.html", "/code/image").permitAll()
+                    .antMatchers("/authentication/require", "/login.html", "/code/image","/code/sms").permitAll()
                     .anyRequest().authenticated().and()
-                .csrf().disable();
+                .csrf().disable()
+                .apply(smsAuthenticationConfig).and()
+                .sessionManagement()
+                    .invalidSessionUrl("/hello.html")
+                    .maximumSessions(1)
+                    .maxSessionsPreventsLogin(true)
+                    .expiredSessionStrategy(myExpiredSessionStrategy);
     }
 
     @Bean
